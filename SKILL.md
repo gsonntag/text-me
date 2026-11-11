@@ -13,6 +13,8 @@ textme "[my-app] ✅ tests pass (142/142). Anything else?"   # Bash timeout: 360
 
 Every text waits for a reply. `textme` sends the message, then listens for up to 5 minutes for the user's reply, so the user can always steer you from their phone. (`~/.local/bin/textme` runs `scripts/notify.ts` in this skill folder. No server needs to be running. Credentials and NOTIFY_PHONE are in this skill's `.env`, which you must not read or echo.)
 
+**Inside a Tether session** (`TETHER_SESSION` is set), don't use this skill: text the person with Tether's `text_person` tool instead, so their reply comes back to the session through Tether. `textme` refuses there.
+
 ## Handling the reply
 
 - Always run it in the **foreground** with the Bash `timeout` set to `360000` (6 min). Don't use `--no-wait`; that's only for the user's own shell scripts.

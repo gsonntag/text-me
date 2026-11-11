@@ -12,6 +12,14 @@
 import { Spectrum } from "spectrum-ts";
 import { imessage } from "@spectrum-ts/imessage";
 import { FileThread, owns, tagOf, type Waiter } from "./thread";
+import { tetherBlock } from "./tether";
+
+// Inside a Tether session, texts go through Tether (scripts/tether.ts).
+const blocked = tetherBlock();
+if (blocked) {
+  console.error(blocked);
+  process.exit(3);
+}
 
 const DEFAULT_WAIT_MS = 5 * 60_000;
 
