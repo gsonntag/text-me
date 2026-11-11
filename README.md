@@ -39,6 +39,7 @@ In Claude Code:
 - Add **"text me when done"** to any request. Claude finishes the work, checks the result, then texts you a one-line summary.
 - **`/text-me <message>`** sends a message directly.
 - If Claude gets blocked and needs a decision, it will text you about that too.
+- **Reply to steer.** At decision points Claude texts with a 5-minute reply window. Your reply goes straight to that agent as an instruction ("skip the migration", "also update the docs"). If you don't reply, it takes the default it stated in the text.
 
 From a terminal or script:
 
@@ -46,7 +47,12 @@ From a terminal or script:
 textme "deploy finished"
 long_job && textme "✅ job done" || textme "❌ job failed"
 echo "piped text works too" | textme
+
+textme --wait "ship it?"          # waits up to 5 min; prints "REPLY: <text>" or "NO_REPLY" (exit 3)
+textme --wait=2m "quick check?"   # custom window
 ```
+
+`--wait` only listens while that one command is running, so there's still nothing running in the background. If two agents are waiting at the same time, your reply goes to both.
 
 ## Troubleshooting
 
