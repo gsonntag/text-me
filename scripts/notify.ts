@@ -1,21 +1,23 @@
 // Send yourself an iMessage via Photon Spectrum.
 //
-//   bun scripts/notify.ts "message"              send and exit
-//   bun scripts/notify.ts --wait "question?"     send, then wait up to 5 min for a reply
-//   bun scripts/notify.ts --wait=10m "question?" custom wait (s/m suffix)
+//   bun scripts/notify.ts "message"              send, then wait up to 5 min for a reply (default)
+//   bun scripts/notify.ts --wait=10m "message"   custom wait (s/m suffix)
+//   bun scripts/notify.ts --no-wait "message"    send and exit immediately
 //
-// With --wait: prints `REPLY: <text>` and exits 0 on a reply, or prints `NO_REPLY` and exits 3 on timeout.
+// When waiting it prints `REPLY: <text>` or `NO_REPLY`, and exits 0 either way.
 // Text can also be piped on stdin.
 import { Spectrum } from "spectrum-ts";
 import { imessage } from "@spectrum-ts/imessage";
 
 const DEFAULT_WAIT_MS = 5 * 60_000;
 
-let waitMs = 0;
+let waitMs = DEFAULT_WAIT_MS;
 const words: string[] = [];
 for (const arg of process.argv.slice(2)) {
   const m = arg.match(/^--wait(?:=(\d+)([sm]?))?$/);
-  if (m) {
+  if (arg === "--no-wait") {
+    waitMs = 0;
+  } else if (m) {
     waitMs = m[1] ? Number(m[1]) * (m[2] === "s" ? 1000 : 60_000) : DEFAULT_WAIT_MS;
   } else {
     words.push(arg);
@@ -26,7 +28,7 @@ const text = words.join(" ").trim() || (process.stdin.isTTY ? "" : (await Bun.st
 const phone = process.env.NOTIFY_PHONE;
 
 if (!text) {
-  console.error('usage: textme [--wait[=5m]] "message"');
+  console.error('usage: textme [--wait=5m | --no-wait] "message"');
   process.exit(2);
 }
 if (!phone) {
@@ -85,7 +87,6 @@ try {
       );
     } else {
       console.log("NO_REPLY");
-      code = 3;
     }
   }
 } catch (err) {
