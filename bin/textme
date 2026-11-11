@@ -1,4 +1,5 @@
 #!/bin/sh
 # Text yourself an iMessage via Photon Spectrum. Usage: textme "build finished"
 SELF=$(readlink -f "$0" 2>/dev/null || realpath "$0")
-cd "$(dirname "$SELF")/.." && exec bun scripts/notify.ts "$@"
+BUN=$(command -v bun || echo "$HOME/.bun/bin/bun")
+cd "$(dirname "$SELF")/.." && exec "$BUN" scripts/notify.ts "$@"
