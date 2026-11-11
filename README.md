@@ -40,7 +40,7 @@ In Claude Code:
 - **`/text-me <message>`** sends a message directly.
 - If Claude gets blocked and needs a decision, it will text you about that too.
 - **Reply to steer.** Every text gives you 5 minutes to reply. Your reply goes straight to that agent as an instruction ("skip the migration", "also update the docs"). If you reply to a "done" text, it takes your reply as its next task, does it and texts you again. If you don't reply, it continues with the default it stated, or stops.
-- **Multiple agents:** each text starts with a tag like `[my-app]`. If several agents are waiting, they all get your reply, and agents ignore replies that look unrelated to their work. Put the tag in your reply to address a specific one.
+- **Multiple agents:** each text starts with a tag like `[my-app]`. Each reply goes to exactly one waiting agent: the one whose text you answer in a thread (long-press → Reply), the one whose tag your reply starts with (`[my-app] skip it`), or otherwise the one that texted last. [Tether](https://github.com/gsonntag/web-coder), texting from the same number, follows the same rule, so a reply to a `textme` text doesn't also reach Tether (and `3 y` for Tether's session [3] doesn't reach a `textme`). They coordinate through small files in `~/.local/state/imessage-thread/`.
 
 From a terminal or script:
 
@@ -65,6 +65,7 @@ echo "piped text works too" | textme --no-wait
 ```
 SKILL.md           instructions Claude follows
 scripts/notify.ts  the sender (spectrum-ts)
+scripts/thread.ts  which waiting agent a reply belongs to
 bin/textme         command-line wrapper
 .env.example       config template; your real .env is gitignored
 ```
