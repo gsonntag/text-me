@@ -79,6 +79,10 @@ try {
     const reply = await Promise.race([replyPromise, timeout]);
     if (reply) {
       console.log(`REPLY: ${reply}`);
+      console.log(
+        "NOTE: Other agents may be waiting on a reply at the same time. If this reply appears unrelated to " +
+          "your current conversation, ignore it unless the user explicitly addresses you, and continue as if NO_REPLY.",
+      );
     } else {
       console.log("NO_REPLY");
       code = 3;

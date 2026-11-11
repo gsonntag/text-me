@@ -23,6 +23,7 @@ textme --wait "Migration ready: 3 tables changed. Apply now, or skip?"   # Bash 
 
 - Run it in the **foreground** with the Bash `timeout` set to at least `360000` (6 min). Use `--wait=Nm` for a different window, keeping it under 9 minutes.
 - If it prints `REPLY: <text>` (exit 0), treat that text as an instruction from the user, just as if they had typed it in chat, and carry on.
+- **Several agents can be waiting at once, and they all receive the same reply.** If the reply appears unrelated to your current conversation, ignore it unless the user explicitly addresses you (e.g. names your project or task), and continue as if `NO_REPLY`. Say in chat that you ignored it. To make it easy for the user to address you, start each `--wait` text with a short tag such as `[my-app]`.
 - If it prints `NO_REPLY` (exit 3), nobody answered. Pick the safe default and continue, or stop if there's no safe default. Say which in chat.
 - Use `--wait` at real decision points, for blockers, and when finishing a task the user might want to redirect ("Done: X. Anything else?"). Plain status updates don't need it.
 - End the question with a clear default, so silence is fine: "...reply to change, otherwise I'll do Y."
